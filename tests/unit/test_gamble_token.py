@@ -1,9 +1,12 @@
-from brownie import GambleToken
-from scripts.helpful_scripts import get_account
+from brownie import GambleToken, network
+from scripts.helpful_scripts import get_account, LOCAL_BLOCKCHAIN_ENVIRONMENTS
 from web3 import Web3
+import pytest
 
 
 def test_can_deploy():
+    if network.show_active() not in LOCAL_BLOCKCHAIN_ENVIRONMENTS:
+        pytest.skip()
     # arrange
     account = get_account()
     # act

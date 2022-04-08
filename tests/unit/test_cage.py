@@ -1,6 +1,6 @@
 from brownie import network, exceptions, accounts, chain
 from scripts.helpful_scripts import (
-    deploy,
+    deploy_cage,
     SECONDS_IN_DAY
 )
 import pytest
@@ -23,14 +23,14 @@ def test_can_deploy():
     Error type
     """
 
-    gamble_token, weth_token, cage, _ = deploy()
+    gamble_token, weth_token, cage, _ = deploy_cage()
 
     assert cage.wethToken() == weth_token.address
 
 
 def test_get_staked_amount():
     # arrange
-    gamble_token, weth_token, cage, account = deploy()
+    gamble_token, weth_token, cage, account = deploy_cage()
     staking_amount = Web3.toWei(2, 'ether')
     weth_token.approve(cage.address, staking_amount, {"from": account})
     tx = cage.stake(staking_amount, {"from": account})
@@ -42,7 +42,7 @@ def test_get_staked_amount():
 
 def test_stake():
     # arrange
-    gamble_token, weth_token, cage, account = deploy()
+    gamble_token, weth_token, cage, account = deploy_cage()
     staking_amount = Web3.toWei(2, 'ether')
     # act
     init_account_balance = weth_token.balanceOf(account.address)
@@ -64,7 +64,7 @@ def test_stake():
 
 def test_stake_no_weth():
     # arrange
-    gamble_token, weth_token, cage, account = deploy()
+    gamble_token, weth_token, cage, account = deploy_cage()
     staking_amount = Web3.toWei(2, 'ether')
     # act/assert
     with pytest.raises(exceptions.VirtualMachineError):
@@ -73,7 +73,7 @@ def test_stake_no_weth():
 
 def test_withdraw_stake_same_amount():
     # arrange
-    gamble_token, weth_token, cage, account = deploy()
+    gamble_token, weth_token, cage, account = deploy_cage()
     staking_amount = Web3.toWei(2, 'ether')
     weth_token.approve(cage.address, staking_amount, {"from": account})
     tx = cage.stake(staking_amount, {"from": account})
@@ -96,7 +96,7 @@ def test_withdraw_stake_same_amount():
 
 def test_withdraw_all_stake_twice():
     # arrange
-    gamble_token, weth_token, cage, account = deploy()
+    gamble_token, weth_token, cage, account = deploy_cage()
     staking_amount = Web3.toWei(1, 'ether')
     weth_token.approve(cage.address, staking_amount * 2, {"from": account})
     tx = cage.stake(staking_amount, {"from": account})
@@ -120,7 +120,7 @@ def test_withdraw_all_stake_twice():
 
 def test_withdraw_some_stake_twice():
     # arrange
-    gamble_token, weth_token, cage, account = deploy()
+    gamble_token, weth_token, cage, account = deploy_cage()
     staking_amount = Web3.toWei(1, 'ether')
     weth_token.approve(cage.address, staking_amount * 3, {"from": account})
     tx = cage.stake(staking_amount * 2, {"from": account})
@@ -144,7 +144,7 @@ def test_withdraw_some_stake_twice():
 
 def test_withdraw_more_than_allowed():
     # arrange
-    gamble_token, weth_token, cage, account = deploy()
+    gamble_token, weth_token, cage, account = deploy_cage()
     staking_amount = Web3.toWei(2, 'ether')
     weth_token.approve(cage.address, staking_amount, {"from": account})
     tx = cage.stake(staking_amount, {"from": account})
@@ -158,7 +158,7 @@ def test_withdraw_more_than_allowed():
 
 def test_withdraw_not_staker():
     # arrange
-    gamble_token, weth_token, cage, account = deploy()
+    gamble_token, weth_token, cage, account = deploy_cage()
     withdraw_amount = Web3.toWei(2, 'ether')
     # act
     # assert
@@ -168,7 +168,7 @@ def test_withdraw_not_staker():
 
 def test_claim_reward_simple():
    # arrange
-    gamble_token, weth_token, cage, account = deploy()
+    gamble_token, weth_token, cage, account = deploy_cage()
     staking_amount = Web3.toWei(1, 'ether')
     weth_token.approve(cage.address, staking_amount, {"from": account})
     tx = cage.stake(staking_amount, {"from": account})
@@ -186,7 +186,7 @@ def test_claim_reward_simple():
 
 def test_claim_reward_mult_stakes():
    # arrange
-    gamble_token, weth_token, cage, account = deploy()
+    gamble_token, weth_token, cage, account = deploy_cage()
     staking_amount = Web3.toWei(1, 'ether')
     weth_token.approve(cage.address, staking_amount * 3, {"from": account})
     tx = cage.stake(staking_amount, {"from": account})
@@ -207,7 +207,7 @@ def test_claim_reward_mult_stakes():
 
 def test_claim_reward_not_staker():
     # arrange
-    gamble_token, weth_token, cage, account = deploy()
+    gamble_token, weth_token, cage, account = deploy_cage()
     # act/assert
     with pytest.raises(exceptions.VirtualMachineError):
         tx = cage.claimReward({"from": account})
@@ -215,11 +215,11 @@ def test_claim_reward_not_staker():
 
 def test_buy_in():
     # arrange
-    gamble_token, weth_token, cage, account = deploy()
+    gamble_token, weth_token, cage, account = deploy_cage()
     buy_in = Web3.toWei(1, 'ether')
     # act
     init_gamble_balance = gamble_token.balanceOf(account.address)
-    expected = 1e15
+    expected = 1e18
     init_weth_balance = weth_token.balanceOf(account.address)
     weth_token.approve(cage.address, buy_in, {"from": account})
     tx = cage.buyIn(buy_in, {"from": account})
@@ -231,7 +231,7 @@ def test_buy_in():
 
 def test_buy_in_zero():
     # arrange
-    gamble_token, weth_token, cage, account = deploy()
+    gamble_token, weth_token, cage, account = deploy_cage()
     buy_in = Web3.toWei(1, 'ether')
     # act
     with pytest.raises(exceptions.VirtualMachineError):
@@ -240,7 +240,7 @@ def test_buy_in_zero():
 
 def test_buy_in_more_than_in_wallet():
     # arrange
-    gamble_token, weth_token, cage, account = deploy()
+    gamble_token, weth_token, cage, account = deploy_cage()
     buy_in = Web3.toWei(100, 'ether')
     # act
     with pytest.raises(exceptions.VirtualMachineError):
@@ -249,7 +249,7 @@ def test_buy_in_more_than_in_wallet():
 
 def test_cash_out():
     # arrange
-    gamble_token, weth_token, cage, account = deploy()
+    gamble_token, weth_token, cage, account = deploy_cage()
     buy_in = Web3.toWei(1, 'ether')
     weth_token.approve(cage.address, buy_in, {"from": account})
     tx = cage.buyIn(buy_in, {"from": account})
@@ -268,7 +268,7 @@ def test_cash_out():
 
 def test_cash_out_more_than_won():
     # arrange
-    gamble_token, weth_token, cage, account = deploy()
+    gamble_token, weth_token, cage, account = deploy_cage()
     buy_in = Web3.toWei(1, 'ether')
     weth_token.approve(cage.address, buy_in, {"from": account})
     tx = cage.buyIn(buy_in, {"from": account})

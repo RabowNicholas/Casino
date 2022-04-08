@@ -22,6 +22,7 @@ contract Cage is Ownable{
 
   event Staked(address indexed user, uint256 amount, uint256 timestamp);
   event Withdrawn(address indexed user, uint256 amount);
+  event CashOut(address indexed user, uint256 amount);
 
   constructor(
     address _gambleTokenAddress,
@@ -122,16 +123,17 @@ contract Cage is Ownable{
     // Send desired buyin to Cage Contract
     wethToken.transferFrom(msg.sender, address(this), _amount);
     //mint appropraite # of gamble to user
-    gambleToken.mint(msg.sender,(_amount / exchangeRate));
+    gambleToken.mint(msg.sender,(_amount));
   }
 
   function cashOut(uint256 _amount) public {
     require(gambleToken.balanceOf(msg.sender) >= _amount, "You might need to put it all on red to cash out that amount.");
-    uint256 cashOutAmount = _amount * exchangeRate;
+    uint256 cashOutAmount = _amount;
     //transfer weth to user
     wethToken.transfer(msg.sender, cashOutAmount);
     //burn gamble (amount)
     gambleToken.burn(msg.sender,_amount);
+    emit CashOut(msg.sender, cashOutAmount);
   }
 
   function _setRewardRate(uint256 _rate) internal onlyOwner {
@@ -141,6 +143,7 @@ contract Cage is Ownable{
   function _setExchangeRate(uint256 _rate) internal onlyOwner {
     exchangeRate = uint16(_rate);
   }
+
 
 
 
