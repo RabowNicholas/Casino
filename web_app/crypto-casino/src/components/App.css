@@ -1,0 +1,129 @@
+:root {
+  --primary-color: 4, 217, 255;
+  --secondary-color: 176, 38, 255;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+.App {
+  font-family: 'Roboto Mono', monospace;
+}
+
+body {
+  background: black;
+}
+
+.nav {
+  display: flex;
+  flex-flow: row;
+  flex-shrink: 3;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.button {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 18px;
+  padding: 12px 32px;
+  margin: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  background-color: rgb(var(--primary-color));
+  border: 1px solid rgb(var(--primary-color));
+  color: white;
+}
+
+.button:hover {
+  transition: all 0.3s ease;
+  box-shadow: 0 0 20px rgba(var(--primary-color), 1);
+}
+
+.nav-buttons {
+  background-image: linear-gradient(to right, rgb(var(--primary-color)), rgb(var(--secondary-color)));
+  border: 0;
+}
+
+.nav-buttons-container {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 33%;
+  margin-right: 33%;
+  max-width: 33%;
+  margin-bottom: 50px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-left: 33%;
+  margin-right: 33%;
+  max-width: 33%;
+  color: white;
+  border: 5px solid white;
+  border-radius: 50px;
+  font-size: 20px;
+  min-width: 0;
+}
+
+.input-form {
+  padding: 24px;
+  font-size: 26px;
+  position: relative;
+}
+
+.input-form label {
+  padding-right: 10px;
+}
+
+.input-form input {
+  border: none;
+  -webkit-appearance: none;
+  -ms-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: #f2f2f2;
+  padding: 12px;
+  border-radius: 3px;
+  width: 250px;
+  font-size: 18px;
+}
+
+.neon {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 30px;
+  color: rgb(var(--primary-color));
+  top: 50%;
+  left: 50%;
+  font-weight: 400;
+  letter-spacing: 6px;
+  text-shadow: 1px 0px 4px rgb(var(--primary-color)), 3px 0px 4px rgb(var(--primary-color)), 2px 3px 15px #eafbff, 2px 0px 15px, 5px 0px 125px, 20px 0vw 200px #f2fdff, 40px 0vw 200px #f2fdff;
+}
+
+.flicker-slow {
+  animation: flicker 3s linear infinite;
+}
+
+.flicker-fast {
+  animation: flicker 1s linear infinite;
+}
+
+@keyframes flicker {
+  0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+    //text-shadow: none;
+    opacity: .99;
+  }
+
+  20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+    opacity: 0.4;
+  }
+}
