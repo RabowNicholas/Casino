@@ -10,7 +10,7 @@ class LandingPage extends Component {
         <button
           className="btn"
           onClick={(event) => {
-            this.props.connectWallet();
+            this.props.web3Handler();
           }}
         >
           Enter
