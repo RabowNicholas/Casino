@@ -1,4 +1,5 @@
 import { Component } from "react";
+import Identicon from "identicon.js";
 import "../index.css";
 import chip_logo from "../assets/chip_logo.png";
 
@@ -31,7 +32,23 @@ class Navbar extends Component {
           {navtabs}
         </div>
         <div className="navbar__account">
-          <p>{this.props.account ? this.props.account : "Not Connected"}</p>
+          <p>
+            <small>
+              {this.props.account ? this.props.account : "Not Connected"}{" "}
+            </small>
+          </p>
+          {this.props.account ? (
+            <img
+              width="30"
+              height="30"
+              src={`data:image/png;base64,${new Identicon(
+                this.props.account,
+                30
+              ).toString()}`}
+            />
+          ) : (
+            <span></span>
+          )}
         </div>
       </nav>
     );
