@@ -1,14 +1,14 @@
 :root {
-  --primary-color: #0C0032;
+  --primary-color: #0c0032;
   --secondary-color-1: #190060;
-  --secondary-color-2: #3500D3;
-  --secondary-color-3: #553D67;
+  --secondary-color-2: #3500d3;
+  --secondary-color-3: #553d67;
   --text-color: white;
 }
 
 body {
   margin: 0;
-  font-family: 'Press Start 2P', cursive;
+  font-family: "Press Start 2P", cursive;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background: var(--primary-color);
@@ -16,7 +16,7 @@ body {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
@@ -25,7 +25,7 @@ code {
 }
 
 .btn {
-  font-family: 'Press Start 2P', cursive;
+  font-family: "Press Start 2P", cursive;
   font-size: 14px;
   padding: 12px 32px;
   margin: 1rem;
@@ -33,7 +33,9 @@ code {
   border-radius: 4px;
   transition: all 0.3s ease;
   border-radius: 50px;
-  background-image: linear-gradient(to right, var(--secondary-color-3), var(--secondary-color-2));
+  background-image: linear-gradient(to right,
+      var(--secondary-color-3),
+      var(--secondary-color-2));
   color: var(--text-color);
 }
 
@@ -52,7 +54,7 @@ code {
 
 .navbar img {
   margin-left: 20px;
-  margin-right: 20px;
+  margin-right: 1vw;
   max-height: 50px;
 }
 
@@ -62,19 +64,19 @@ code {
 }
 
 .navbar input {
-  font-size: 100%;
-  font-family: 'Press Start 2P';
+  font-size: 1.5vw;
+  font-family: "Press Start 2P";
   border: none;
   background: none;
   cursor: pointer;
-  margin-right: 10px;
+  margin-right: 1vw;
   color: var(--text-color);
 }
 
 .navbar__account {
   display: flex;
   align-items: flex-end;
-  font-size: 50%;
+  font-size: 1vw;
   margin-right: 20px;
 }
 
@@ -99,4 +101,77 @@ code {
   margin-left: auto;
   margin-right: auto;
   width: 300px;
+}
+
+/*StakeForm*/
+.coming_soon_header {
+  font-size: 5vw;
+  text-align: center;
+}
+
+.stakeform__container {
+  display: flex;
+  justify-content: space-around;
+  align-items: space;
+  padding-top: 100px;
+  filter: blur(2px);
+}
+
+.stakeform__container img {
+  max-width: 15px;
+  padding: 10px 10px;
+}
+
+.stakeform__container h1 {
+  font-size: 2vw;
+}
+
+.stakeform__container p {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1vw;
+}
+
+.stakeform__card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 30vw;
+  border: 5px solid var(--secondary-color-3);
+  border-radius: 50px;
+}
+
+.stakeform__card__btn {
+  font-size: 1vw;
+  font-family: "Press Start 2P", cursive;
+  padding: 12px 32px;
+  margin: 1rem;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  border-radius: 50px;
+  background-image: linear-gradient(to right,
+      var(--secondary-color-3),
+      var(--secondary-color-2));
+  color: var(--text-color);
+}
+
+.stakeform__card__btn:hover {
+  transition: all 0.3s ease;
+  box-shadow: white 0px 0px 20px 0px;
+}
+
+.stakeform__card__input {
+  font-family: "Press Start 2P";
+  width: 10vw;
+  height: 2vw;
+  box-shadow: white 0px 0px 10px 0px;
+  border-radius: 7px;
+}
+
+.stakeform__card__input::placeholder {
+  font-size: 1vw;
+  font-family: "Press Start 2P"
 }

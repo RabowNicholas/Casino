@@ -4,15 +4,21 @@ import Navbar from "./components/Navbar";
 import LandingPage from "./components/LandingPage";
 import StakeForm from "./components/StakeForm";
 import Footer from "./components/Footer";
+import address_mapping from "./contracts_data/map.json";
 
 class App extends Component {
+  async componentDidMount() {
+    this.connectBlockchain();
+  }
   async connectBlockchain() {
     //get provider from metamask
     const provider = new ethers.providers.Web3Provider(window.ethereum);
-    console.log(provider);
+    this.setState({ provider });
+    const network = await provider.getNetwork();
+
     //get signer
     const signer = provider.getSigner();
-    this.loadContracts(signer);
+    this.loadContracts(network.name, signer);
   }
 
   //LandingPage pass through functions
@@ -24,33 +30,31 @@ class App extends Component {
     await this.setState({ account: accounts[0] });
     this.setState({ page: "play" });
   }
-  async loadContracts(signer) {
-    console.log(signer);
+  async loadContracts(network_name, signer) {
+    console.log(network_name);
   }
 
   //Navbar pass through functions
-  clickStakeHandler() {
+  async clickStakeHandler() {
     this.setState({ page: "stake" });
-    this.getWethBalance(this.state.account);
+    const provider = this.state.provider;
+    const ethBalance = await provider.getBalance(this.state.account);
+    this.setState({ ethBalance });
   }
 
   clickPlayHandler() {
     this.setState({ page: "play" });
   }
 
-  async getWethBalance(account) {
-    console.log("retreiving weth balance");
-  }
-
   constructor(props) {
     super(props);
     this.state = {
+      provider: null,
       page: "landing",
       account: null,
-      balanceEth: 0,
+      ethBalance: 0,
     };
 
-    this.connectBlockchain();
     this.connectWallet = this.connectWallet.bind(this);
     this.clickStakeHandler = this.clickStakeHandler.bind(this);
     this.clickPlayHandler = this.clickPlayHandler.bind(this);
@@ -63,7 +67,7 @@ class App extends Component {
     } else if (this.state.page === "play") {
       content = <p> here will lie the play page </p>;
     } else if (this.state.page === "stake") {
-      content = <StakeForm balanceEth={this.state.balanceEth} />;
+      content = <StakeForm ethBalance={this.state.ethBalance} />;
     }
     return (
       <div>
