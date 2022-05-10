@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import Navbar from "./components/Navbar";
 import LandingPage from "./components/LandingPage";
 import StakeForm from "./components/StakeForm";
+import PlayCards from "./components/PlayCards";
 import Footer from "./components/Footer";
 import address_mapping from "./contracts_data/map.json";
 
@@ -65,7 +66,7 @@ class App extends Component {
     if (this.state.page === "landing") {
       content = <LandingPage connectWallet={this.connectWallet} />;
     } else if (this.state.page === "play") {
-      content = <p> here will lie the play page </p>;
+      content = <PlayCards />;
     } else if (this.state.page === "stake") {
       content = <StakeForm ethBalance={this.state.ethBalance} />;
     }
