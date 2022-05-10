@@ -89,6 +89,7 @@ code {
 }
 
 .landing__page img {
+  width: min(100vw, 1200px);
   max-width: 1200px;
 }
 
