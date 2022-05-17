@@ -12,8 +12,8 @@ class Navbar extends Component {
         <div>
           <input
             type="button"
-            value="Stake"
-            onClick={this.props.clickStakeHandler}
+            value="Cage"
+            onClick={this.props.clickCageHandler}
           ></input>
           <input
             type="button"

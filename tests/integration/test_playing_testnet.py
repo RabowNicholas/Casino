@@ -15,13 +15,12 @@ def test_playing():
 
     # deploy all contracts correctly
     roulette, gamble_token, cage, account = deploy()
-    weth_token = get_contract('weth_token')
     # exchange weth for gamble
     buy_in = 10e15
     init_player_gamble = gamble_token.balanceOf(account)
     print(f"Buying in with {buy_in}...")
-    weth_token.approve(cage.address, buy_in, {"from": account})
-    cage.buyIn(buy_in, {"from": account})
+
+    cage.buyIn({"from": account, "value": buy_in})
     after_buy_player_gamble = gamble_token.balanceOf(account)
     assert after_buy_player_gamble == buy_in + init_player_gamble
     print("Successful buy in.")
@@ -60,11 +59,9 @@ def test_playing():
     current_balance = gamble_token.balanceOf(account)
     assert current_balance == init_balance + actual_payout
     print(f"Current GMBL balance is: {current_balance}")
-    current_weth_balance = weth_token.balanceOf(account)
+    assert actual_payout == expected_payout
     cash_out = cage.cashOut(actual_payout, {"from": account})
     cash_out_amount = cash_out.events['CashOut']['amount']
-    assert weth_token.balanceOf(
-        account) == current_weth_balance + cash_out_amount
 
 
 def main():

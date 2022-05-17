@@ -17,10 +17,8 @@ def deploy():
     account = get_account()
     print(f"Account is {account}")
     gamble_token = GambleToken.deploy({"from": account})
-    weth_token = get_contract('weth_token')
     cage = Cage.deploy(
         gamble_token.address,
-        weth_token.address,
         1000,
         1000,
         {"from": account}
@@ -35,7 +33,7 @@ def deploy():
 
 
 def main():
-    _, _, _, _, _ = deploy()
+    _, _, _, _ = deploy()
 
 
 if __name__ == "__main__":

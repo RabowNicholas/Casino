@@ -13,13 +13,12 @@ def test_playing():
         pytest.skip()
 
     # deploy all contracts correctly
-    roulette, gamble_token, weth_token, cage, dealer, players = deploy_contracts()
+    roulette, gamble_token, cage, dealer, players = deploy_contracts()
     # exchange weth for gamble
     buy_in = 10e15
     init_player_gamble = gamble_token.balanceOf(players[0])
     print(f"Buying in with {buy_in}...")
-    weth_token.approve(cage.address, buy_in, {"from": players[0]})
-    cage.buyIn(buy_in, {"from": players[0]})
+    cage.buyIn({"from": players[0], "value": buy_in})
     after_buy_player_gamble = gamble_token.balanceOf(players[0])
     assert after_buy_player_gamble == buy_in + init_player_gamble
     print("Successful buy in.")
@@ -58,11 +57,10 @@ def test_playing():
     current_balance = gamble_token.balanceOf(players[0])
     assert current_balance == init_balance + actual_payout
     print(f"Current GMBL balance is: {current_balance}")
-    current_weth_balance = weth_token.balanceOf(players[0])
+    current_eth_balance = players[0].balance()
     cash_out = cage.cashOut(actual_payout, {"from": players[0]})
     cash_out_amount = cash_out.events['CashOut']['amount']
-    assert weth_token.balanceOf(
-        players[0]) == current_weth_balance + cash_out_amount
+    assert players[0].balance() == current_eth_balance + cash_out_amount
 
 
 def main():

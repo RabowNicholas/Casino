@@ -26,11 +26,10 @@ contract Cage is Ownable{
 
   constructor(
     address _gambleTokenAddress,
-    address _wethTokenAddress,
     uint256 _rewardRate,
     uint256 _exchangeRate
   ) public {
-    wethToken = IERC20(_wethTokenAddress);
+
     gambleToken = GambleToken(_gambleTokenAddress);
     _setRewardRate(_rewardRate);
     _setExchangeRate(_exchangeRate);
@@ -41,21 +40,19 @@ contract Cage is Ownable{
   }
 
 
-  function stake(uint256 _amount) public {
+  function stake() public payable {
     // Sender has enough WETH to stake amount desired
-    require(wethToken.balanceOf(msg.sender) > _amount, "You do not own enough WETH");
+    require(msg.sender.balance > msg.value, "You do not own enough ETH");
 
-    // Send desired stake to Cashier Contract
-    wethToken.transferFrom(msg.sender, address(this), _amount);
 
     //add msg.sender to stakers list
     stakers[msg.sender] = true;
     // If successful update values
     uint256 timestamp = block.timestamp;
-    stakerToStakes[msg.sender].push(Stake(_amount, timestamp));
+    stakerToStakes[msg.sender].push(Stake(msg.value, timestamp));
 
     // then emit event
-    emit Staked(msg.sender, _amount, timestamp);
+    emit Staked(msg.sender, msg.value, timestamp);
   }
 
 
@@ -63,7 +60,7 @@ contract Cage is Ownable{
     uint256 totalAmountStaked = getStakedAmount(msg.sender);
     require(_amount <= totalAmountStaked, "Attempting to withdraw more than staked.");
     //withdraw
-    wethToken.transfer(msg.sender, _amount);
+    payable(msg.sender).transfer(_amount);
     if (totalAmountStaked == _amount) { //entire stake withdrawn
       stakers[msg.sender] = false;
     }
@@ -116,21 +113,19 @@ contract Cage is Ownable{
     return rewardValue;
   }
 
-  function buyIn(uint256 _amount) public {
+  function buyIn() public payable{
     // Sender has enough WETH to stake amount desired
-    require(wethToken.balanceOf(msg.sender) >= _amount, "You do not own enough WETH");
+    require(msg.sender.balance >= msg.value, "You do not own enough ETH");
 
-    // Send desired buyin to Cage Contract
-    wethToken.transferFrom(msg.sender, address(this), _amount);
     //mint appropraite # of gamble to user
-    gambleToken.mint(msg.sender,(_amount));
+    gambleToken.mint(msg.sender,(msg.value));
   }
 
   function cashOut(uint256 _amount) public {
     require(gambleToken.balanceOf(msg.sender) >= _amount, "You might need to put it all on red to cash out that amount.");
     uint256 cashOutAmount = _amount;
-    //transfer weth to user
-    wethToken.transfer(msg.sender, cashOutAmount);
+    //transfer eth to user
+    payable(msg.sender).transfer(_amount);
     //burn gamble (amount)
     gambleToken.burn(msg.sender,_amount);
     emit CashOut(msg.sender, cashOutAmount);
