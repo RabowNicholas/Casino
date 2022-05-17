@@ -247,15 +247,13 @@ def deploy_cage():
         pytest.skip()
     account = get_account()
     gamble_token = GambleToken.deploy({"from": account})
-    weth_token = get_contract('weth_token')
     cage = Cage.deploy(
         gamble_token.address,
-        weth_token.address,
         1000,
         1000,
         {"from": account}
     )
-    return gamble_token, weth_token, cage, account
+    return gamble_token, cage, account
 
 
 def deploy_contracts():
@@ -264,11 +262,9 @@ def deploy_contracts():
     dealer = get_account(index=0)
     players = []
     gamble_token = GambleToken.deploy({"from": dealer})
-    weth_token = get_contract('weth_token')
     print("Deploying Cage...")
     cage = Cage.deploy(
         gamble_token.address,
-        weth_token.address,
         1000,
         1000,
         {"from": dealer}
@@ -284,13 +280,11 @@ def deploy_contracts():
     for i in range(1, 9):
         players.append(get_account(index=i))
         gamble_token.mint(players[i - 1], 10e15, {"from": dealer})
-        weth_token.transfer(players[i - 1], 1e18, {"from": dealer})
     print("Funded all players")
 
     return(
         roulette,
         gamble_token,
-        weth_token,
         cage,
         dealer,
         players
