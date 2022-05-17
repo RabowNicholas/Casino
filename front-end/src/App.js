@@ -7,6 +7,7 @@ import PlayCards from "./components/PlayCards";
 import Footer from "./components/Footer";
 import Roulette from "./components/Roulette";
 import address_mapping from "./contracts_data/map.json";
+import rouletteAbi from "./contracts_data/Roulette.json";
 
 class App extends Component {
   async componentDidMount() {
@@ -33,7 +34,13 @@ class App extends Component {
     this.setState({ page: "play" });
   }
   async loadContracts(network_name, signer) {
-    console.log(network_name);
+    let rouletteAddress = address_mapping[network_name]["Roulette"];
+    const roulette = new ethers.Contract(
+      rouletteAddress,
+      rouletteAbi.abi,
+      signer
+    );
+    this.setState({ rouletteContract: roulette });
   }
 
   //Navbar pass through functions
@@ -57,6 +64,7 @@ class App extends Component {
     super(props);
     this.state = {
       provider: null,
+      rouletteContract: 0x00,
       page: "landing",
       account: null,
       ethBalance: 0,
