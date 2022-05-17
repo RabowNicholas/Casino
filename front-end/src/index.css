@@ -4,10 +4,11 @@
   --secondary-color-2: #3500d3;
   --secondary-color-3: #553d67;
   --text-color: white;
+  --number-size: 40;
 }
 
 body {
-  margin: 0;
+  margin: 1rem;
   font-family: "Press Start 2P", cursive;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -27,7 +28,7 @@ code {
 .btn {
   font-family: "Press Start 2P", cursive;
   font-size: 14px;
-  padding: 12px 32px;
+  padding: 1vw 2vw;
   margin: 1rem;
   cursor: pointer;
   border-radius: 4px;
@@ -230,4 +231,134 @@ code {
 .gamecard__btn:hover {
   transition: all 0.3s ease;
   box-shadow: white 0px 0px 20px 0px;
+}
+
+/*roulette game*/
+.roulette__container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.roulette__wheel {
+  width: min(40vw, 700px);
+  height: min(40vw, 700px);
+}
+
+.roulette__table {
+  width: 43.75vw;
+}
+
+.chip_select {
+  text-align: center;
+}
+
+.numbers {
+  display: grid;
+  grid-template-columns: repeat(14, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  grid-gap: 0px;
+  width: 40.5vw;
+}
+
+.numbers img {
+  width: 3.12vw;
+  height: 3.12vw;
+}
+
+.allnumbers {
+  display: grid;
+}
+
+.dozens {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(1, 1fr);
+  grid-gap: 0px;
+  width: 37.25vw;
+  padding-left: 3.12vw;
+}
+
+.dozens img {
+  width: 12.48vw;
+  height: 3.12vw;
+}
+
+.outsidebets {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(1, 1fr);
+  grid-gap: 0px;
+  width: 37.25vw;
+  padding-left: 3.12vw;
+}
+
+.outsidebets img {
+  width: 6.24vw;
+  height: 3.12vw;
+}
+
+.chips {
+  display: flex;
+  justify-content: space-between;
+  width: 43.75vw;
+  padding-top: 2vw;
+}
+
+.chips img {
+  border-radius: 50px;
+  height: 3.12vw;
+  width: 3.12vw;
+}
+
+.chips img:hover {
+  transition: all 0.3s ease;
+  box-shadow: white 0px 0px 20px 0px;
+}
+
+.chip_select {
+  font-size: 1vw;
+}
+
+.bet_buttons {
+  display: flex;
+  justify-content: center;
+  padding-top: 2vw;
+}
+
+.additional_bets {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 15vw;
+}
+
+.additional_bets p {
+  font-size: 1vw;
+  text-align: center;
+}
+
+.additional_bets select {
+  margin: 1rem;
+  font-size: 1vw;
+  width: 10vw;
+}
+
+.bets_btn {
+  font-family: "Press Start 2P", cursive;
+  font-size: 12px;
+  padding: 0.5vw 0.5vw;
+  margin: 1rem;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  border-radius: 50px;
+  background-image: linear-gradient(to right,
+      var(--secondary-color-3),
+      var(--secondary-color-2));
+  color: var(--text-color);
+}
+
+.gameinfo {
+  font-size: 1vw;
 }

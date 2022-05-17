@@ -7,7 +7,7 @@ import blackjack from "../assets/blackjack.png";
 
 class PlayCards extends Component {
   joinRoulette() {
-    console.log("joining roulette");
+    this.props.joinRoulette();
   }
 
   constructor(props) {

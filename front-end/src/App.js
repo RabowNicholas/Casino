@@ -5,6 +5,7 @@ import LandingPage from "./components/LandingPage";
 import StakeForm from "./components/StakeForm";
 import PlayCards from "./components/PlayCards";
 import Footer from "./components/Footer";
+import Roulette from "./components/Roulette";
 import address_mapping from "./contracts_data/map.json";
 
 class App extends Component {
@@ -47,6 +48,11 @@ class App extends Component {
     this.setState({ page: "play" });
   }
 
+  //PlayCards pass through functions
+  clickJoinRouletteHandler() {
+    this.setState({ page: "roulette" });
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -59,6 +65,7 @@ class App extends Component {
     this.connectWallet = this.connectWallet.bind(this);
     this.clickStakeHandler = this.clickStakeHandler.bind(this);
     this.clickPlayHandler = this.clickPlayHandler.bind(this);
+    this.clickJoinRouletteHandler = this.clickJoinRouletteHandler.bind(this);
   }
 
   render() {
@@ -66,9 +73,11 @@ class App extends Component {
     if (this.state.page === "landing") {
       content = <LandingPage connectWallet={this.connectWallet} />;
     } else if (this.state.page === "play") {
-      content = <PlayCards />;
+      content = <PlayCards joinRoulette={this.clickJoinRouletteHandler} />;
     } else if (this.state.page === "stake") {
       content = <StakeForm ethBalance={this.state.ethBalance} />;
+    } else if (this.state.page === "roulette") {
+      content = <Roulette />;
     }
     return (
       <div>
