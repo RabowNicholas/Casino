@@ -2,6 +2,7 @@ import { Component } from "react";
 import { ethers } from "ethers";
 import Navbar from "./components/Navbar";
 import LandingPage from "./components/LandingPage";
+import Cage from "./components/Cage";
 import StakeForm from "./components/StakeForm";
 import PlayCards from "./components/PlayCards";
 import Footer from "./components/Footer";
@@ -48,6 +49,7 @@ class App extends Component {
     const cage = new ethers.Contract(cageAddress, cageAbi.abi, signer);
     this.setState({ rouletteContract: roulette });
     this.setState({ gambleContract: gamble });
+    this.setState({ cageContract: cage });
   }
 
   //Navbar pass through functions
@@ -55,6 +57,9 @@ class App extends Component {
     this.setState({ page: "cage" });
     const provider = this.state.provider;
     const ethBalance = await provider.getBalance(this.state.account);
+    let gmblBalance = await this.state.gambleContract.balanceOf(
+      this.state.account
+    );
     this.setState({ ethBalance });
   }
 
@@ -62,14 +67,23 @@ class App extends Component {
     this.setState({ page: "play" });
   }
 
+  async clickStakeHandler() {
+    this.setState({ page: "stake" });
+    const ethBalance = await this.state.provider.getBalance(this.state.account);
+    let gmblBalance = await this.state.gambleContract.balanceOf(
+      this.state.account
+    );
+    this.setState({ ethBalance });
+  }
+
   //PlayCards pass through functions
   async clickJoinRouletteHandler() {
-    if ((await this.state.gambleContract.balanceOf(this.state.account)) == 0) {
+    if ((await this.state.gambleContract.balanceOf(this.state.account)) === 0) {
       alert(
         "You need GMBL to sit down at table. Go to Cage to get more chips."
       );
     } else {
-      let tx = await this.state.rouletteContract.joinTable();
+      await this.state.rouletteContract.joinTable();
       let isAtTable = await this.state.rouletteContract.isAtTable(
         this.state.account
       );
@@ -85,15 +99,18 @@ class App extends Component {
       provider: null,
       rouletteContract: 0x00,
       gambleContract: 0x00,
-      page: "cage",
+      cageContract: 0x00,
+      page: "landing",
       account: null,
       ethBalance: 0,
+      gmblBalance: 0,
     };
 
     this.connectWallet = this.connectWallet.bind(this);
     this.clickCageHandler = this.clickCageHandler.bind(this);
     this.clickPlayHandler = this.clickPlayHandler.bind(this);
     this.clickJoinRouletteHandler = this.clickJoinRouletteHandler.bind(this);
+    this.clickStakeHandler = this.clickStakeHandler.bind(this);
   }
 
   render() {
@@ -103,7 +120,13 @@ class App extends Component {
     } else if (this.state.page === "play") {
       content = <PlayCards joinRoulette={this.clickJoinRouletteHandler} />;
     } else if (this.state.page === "cage") {
-      content = <p> here lies cage </p>;
+      content = (
+        <Cage
+          ethBalance={this.state.ethBalance}
+          gmblBalance={this.state.gmblBalance}
+          gmblContract={this.state.gambleContract}
+        />
+      );
     } else if (this.state.page === "stake") {
       content = <StakeForm ethBalance={this.state.ethBalance} />;
     } else if (this.state.page === "roulette") {
@@ -116,6 +139,7 @@ class App extends Component {
           page={this.state.page}
           clickCageHandler={this.clickCageHandler}
           clickPlayHandler={this.clickPlayHandler}
+          clickStakeHandler={this.clickStakeHandler}
         />
         {content}
         <Footer />
