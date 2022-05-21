@@ -105,9 +105,9 @@ class Cage extends Component {
       <div className="cage__container">
         <div className="switch__container">
           <p> Buy In </p>
-          <label class="switch">
+          <label className="switch">
             <input type="checkbox" onChange={this.toggleForm}></input>
-            <span class="slider round"></span>
+            <span className="slider round"></span>
           </label>
           <p> Cash Out </p>
         </div>

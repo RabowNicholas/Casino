@@ -83,8 +83,12 @@ contract Cage is Ownable{
   }
 
   function claimReward() public onlyStakers {
-    uint256 amountToMint = _getRewardValue();
+    uint256 amountToMint = _getRewardValue(msg.sender);
     gambleToken.mint(msg.sender, amountToMint);
+  }
+
+  function getRewardValue(address _player) public view returns(uint256) {
+    return _getRewardValue(_player);
   }
 
   function getStakedAmount(address _account) public view returns(uint256) {
@@ -103,9 +107,9 @@ contract Cage is Ownable{
   function getStakeObj(address _account, uint256 _index) public view returns(Stake memory) {
     return stakerToStakes[_account][_index];
   }
-  function _getRewardValue() internal returns(uint256) {
+  function _getRewardValue(address _player) internal view returns(uint256) {
     uint256 rewardValue = 0;
-    Stake[] memory currentStakes = stakerToStakes[msg.sender];
+    Stake[] memory currentStakes = stakerToStakes[_player];
     for (uint i = 0; i < currentStakes.length; i++){
       // mint = how much(eth) * how long(days) / rewardrate(1000)
       rewardValue += (currentStakes[i].amount * ((block.timestamp - currentStakes[i].timestamp) / 1 days)) / rewardRate;

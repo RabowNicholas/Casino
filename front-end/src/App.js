@@ -129,7 +129,13 @@ class App extends Component {
         />
       );
     } else if (this.state.page === "stake") {
-      content = <StakeForm ethBalance={this.state.ethBalance} />;
+      content = (
+        <StakeForm
+          account={this.state.account}
+          ethBalance={this.state.ethBalance}
+          cageContract={this.state.cageContract}
+        />
+      );
     } else if (this.state.page === "roulette") {
       content = (
         <Roulette

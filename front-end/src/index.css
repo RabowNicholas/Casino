@@ -106,17 +106,11 @@ code {
 }
 
 /*StakeForm*/
-.coming_soon_header {
-  font-size: 5vw;
-  text-align: center;
-}
-
 .stakeform__container {
   display: flex;
   justify-content: space-around;
   align-items: space;
   padding-top: 100px;
-  filter: blur(2px);
 }
 
 .stakeform__container img {
@@ -133,6 +127,7 @@ code {
   align-items: center;
   justify-content: center;
   font-size: 1vw;
+  margin: 1rem;
 }
 
 .card {
@@ -372,25 +367,6 @@ code {
   justify-content: space-around;
   align-items: center;
   padding-top: 100px;
-}
-
-.stake_button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.coming_soon_header {
-  font-size: 5vw;
-  text-align: center;
-}
-
-.stakeform__container {
-  display: flex;
-  justify-content: space-around;
-  align-items: space;
-  padding-top: 100px;
-  filter: blur(2px);
 }
 
 .cage__container img {
