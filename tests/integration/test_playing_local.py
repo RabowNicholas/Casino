@@ -15,12 +15,12 @@ def test_playing():
     # deploy all contracts correctly
     roulette, gamble_token, cage, dealer, players = deploy_contracts()
     # exchange weth for gamble
-    buy_in = 10e15
+    buy_in = 1e16
     init_player_gamble = gamble_token.balanceOf(players[0])
     print(f"Buying in with {buy_in}...")
     cage.buyIn({"from": players[0], "value": buy_in})
     after_buy_player_gamble = gamble_token.balanceOf(players[0])
-    assert after_buy_player_gamble == buy_in + init_player_gamble
+    assert after_buy_player_gamble == buy_in*1000 + init_player_gamble
     print("Successful buy in.")
     # sit down at table
     print("Joining Table...")
@@ -29,11 +29,11 @@ def test_playing():
     print("Successfully joined table.")
     # make bet
     print("Place bet 1 GMBL on Red, 1 GMBL on 69 split...")
-    bet_amounts = [1e15, 1e15]
+    bet_amounts = [1e18, 1e18]
     bet_types = [BET['Red'], BET['Split_6_9']]
-    gamble_token.approve(roulette.address, 2e15, {"from": players[0]})
+    gamble_token.approve(roulette.address, 2e18, {"from": players[0]})
     place_bet = roulette.placeBet(bet_amounts, bet_types, {"from": players[0]})
-    assert place_bet.events['BetsPlaced']['totalBet'] == 2e15
+    assert place_bet.events['BetsPlaced']['totalBet'] == 2e18
     print("Successfully placed bet.")
 
     # wait for payment of funds
@@ -48,9 +48,9 @@ def test_playing():
     actual_payout = settle.events["WinningsPaidOut"]['payout']
     expected_payout = 0
     if winningNumber in [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36]:
-        expected_payout += 2e15
+        expected_payout += 2e18
     if winningNumber in [6, 9]:
-        expected_payout += 18e15
+        expected_payout += 18e18
 
     assert expected_payout == actual_payout
     print("All debts settled")
@@ -58,7 +58,8 @@ def test_playing():
     assert current_balance == init_balance + actual_payout
     print(f"Current GMBL balance is: {current_balance}")
     current_eth_balance = players[0].balance()
-    cash_out = cage.cashOut(actual_payout, {"from": players[0]})
+    print(f"Cashing out: {current_balance}")
+    cash_out = cage.cashOut(current_balance, {"from": players[0]})
     cash_out_amount = cash_out.events['CashOut']['amount']
     assert players[0].balance() == current_eth_balance + cash_out_amount
 

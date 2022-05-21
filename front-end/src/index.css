@@ -135,7 +135,7 @@ code {
   font-size: 1vw;
 }
 
-.stakeform__card {
+.card {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -247,6 +247,8 @@ code {
 
 .roulette__table {
   width: 43.75vw;
+  margin: 1rem;
+  border-radius: 5px;
 }
 
 .chip_select {
@@ -361,4 +363,141 @@ code {
 
 .gameinfo {
   font-size: 1vw;
+}
+
+/*Cage*/
+.cage__container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  padding-top: 100px;
+}
+
+.stake_button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.coming_soon_header {
+  font-size: 5vw;
+  text-align: center;
+}
+
+.stakeform__container {
+  display: flex;
+  justify-content: space-around;
+  align-items: space;
+  padding-top: 100px;
+  filter: blur(2px);
+}
+
+.cage__container img {
+  max-width: 15px;
+  padding: 10px 10px;
+}
+
+.cage__container h1 {
+  font-size: 2vw;
+}
+
+.cage__container p {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1vw;
+  margin: 1rem;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 30vw;
+  border: 5px solid var(--secondary-color-3);
+  border-radius: 50px;
+  margin: 1rem;
+}
+
+.card__input {
+  font-family: "Press Start 2P";
+  width: 15vw;
+  height: 2vw;
+  box-shadow: white 0px 0px 10px 0px;
+  border-radius: 7px;
+}
+
+.stakeform__card__input::placeholder {
+  font-size: 1vw;
+  font-family: "Press Start 2P";
+}
+
+.switch__container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 5vw;
+  height: 2.84vw;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--secondary-color-1);
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 2.17vw;
+  width: 2.17vw;
+  left: 0.25vw;
+  bottom: 0.25vw;
+  background-color: var(--secondary-color-2);
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked+.slider {
+  background-color: var(--secondary-color-3);
+}
+
+input:focus+.slider {
+  box-shadow: 0 0 1px var(--secondary-color-3);
+}
+
+input:checked+.slider:before {
+  -webkit-transform: translateX(2.17vw);
+  -ms-transform: translateX(2.17vw);
+  transform: translateX(2.17vw);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
 }

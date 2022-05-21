@@ -248,6 +248,8 @@ contract Roulette is Ownable{
         payout += ((playerBets[i].amount * multiplier) + playerBets[i].amount);
       }
     }
+
+    require(payout > 0, "Payout was 0");
     gambleToken.mint(_player, payout);
     playerToWinnings[_player] = payout;
     playerToLifetimeWinnings[_player] += payout;

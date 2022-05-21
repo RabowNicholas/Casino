@@ -118,14 +118,14 @@ contract Cage is Ownable{
     require(msg.sender.balance >= msg.value, "You do not own enough ETH");
 
     //mint appropraite # of gamble to user
-    gambleToken.mint(msg.sender,(msg.value));
+    gambleToken.mint(msg.sender,(msg.value*1000));
   }
 
   function cashOut(uint256 _amount) public {
     require(gambleToken.balanceOf(msg.sender) >= _amount, "You might need to put it all on red to cash out that amount.");
-    uint256 cashOutAmount = _amount;
+    uint256 cashOutAmount = _amount/1000;
     //transfer eth to user
-    payable(msg.sender).transfer(_amount);
+    payable(msg.sender).transfer(cashOutAmount);
     //burn gamble (amount)
     gambleToken.burn(msg.sender,_amount);
     emit CashOut(msg.sender, cashOutAmount);
@@ -143,7 +143,7 @@ contract Cage is Ownable{
 
 
   modifier onlyStakers() {
-    require(stakers[msg.sender], "You have not staked any WETH.");
+    require(stakers[msg.sender], "You have not staked any ETH.");
     _;
   }
 

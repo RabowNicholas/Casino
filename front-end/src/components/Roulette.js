@@ -57,6 +57,7 @@ import chip10 from "../assets/chip10.png";
 import chip25 from "../assets/chip25.png";
 import chip100 from "../assets/chip100.png";
 import chipeth from "../assets/chipeth.png";
+import stopArray from "../assets/roulette/stop/stopArray";
 
 class Roulette extends Component {
   betBuffer = new Array();
@@ -222,6 +223,7 @@ class Roulette extends Component {
     this.betBuffer.length = 0;
     this.setState({ Bets: [] });
     this.setState({ amounts: [] });
+    this.setState({ state: "waiting_for_bet" });
   }
 
   handlePlaceBets() {
@@ -232,10 +234,36 @@ class Roulette extends Component {
       }
       amounts[i] = amounts[i] * 1e15;
     }
-    this.setState({ amounts });
-    this.setState({ state: "spinning" });
+    this.setState({ amounts }, this.placeBets);
+  }
+
+  async placeBets() {
     console.log(this.state.amounts);
     console.log(this.state.Bets);
+    await this.props.rouletteContract.placeBet(
+      this.state.amounts,
+      this.state.Bets
+    );
+    this.spinWheel();
+  }
+
+  async spinWheel() {
+    //will work while the owner is playing, but no one else. to improve use chainlink keepers to make spinWheel call.
+    this.setState({ state: "spinning" });
+    await this.props.rouletteContract.spinWheel();
+    const winningNumber = await this.props.rouletteContract.getWinningNumber();
+    this.setState({ winningNumber }, console.log(winningNumber));
+    this.setState({ state: "stopped" });
+  }
+
+  async handleSettlement() {
+    console.log("settling...");
+    await this.props.rouletteContract.settleAllBets();
+    const winnings = await this.props.rouletteContract.getWinnings(
+      this.props.account
+    );
+    console.log(winnings);
+    this.setState({ state: "waiting_for_bet" });
   }
 
   constructor(props) {
@@ -246,6 +274,7 @@ class Roulette extends Component {
       extraBet: "None",
       Bets: [],
       amounts: [],
+      winningNumber: 0,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -253,6 +282,9 @@ class Roulette extends Component {
     this.handleNumberClick = this.handleNumberClick.bind(this);
     this.handleClearBets = this.handleClearBets.bind(this);
     this.handlePlaceBets = this.handlePlaceBets.bind(this);
+    this.spinWheel = this.spinWheel.bind(this);
+    this.placeBets = this.placeBets.bind(this);
+    this.handleSettlement = this.handleSettlement.bind(this);
   }
   render() {
     let wheel_img;
@@ -260,6 +292,9 @@ class Roulette extends Component {
       wheel_img = roulette_wheel;
     } else if (this.state.state === "spinning") {
       wheel_img = roulette_animate;
+    } else if (this.state.state === "stopped") {
+      wheel_img = stopArray[this.state.winningNumber];
+      this.handleSettlement();
     }
 
     const betOptionsSplits = [
@@ -942,7 +977,7 @@ class Roulette extends Component {
               value={this.state.extraBet}
               onChange={this.handleChange}
             >
-              <option value="" disable selected hidden>
+              <option value="" disable="true" hidden>
                 None
               </option>
               <optgroup label="Splits">
@@ -954,7 +989,7 @@ class Roulette extends Component {
               </optgroup>
               <optgroup label="Squares">
                 {betOptionsSquares.map((option) => (
-                  <option key={option.value} value={option.value}>
+                  <option key={option.counter} value={option.value}>
                     {option.label}
                   </option>
                 ))}

@@ -184,7 +184,7 @@ def test_buy_in():
     buy_in = Web3.toWei(1, 'ether')
     # act
     init_gamble_balance = gamble_token.balanceOf(account.address)
-    expected = 1e18
+    expected = 1e21
     init_weth_balance = account.balance()
     tx = cage.buyIn({"from": account, "value":buy_in})
     # assert
@@ -212,12 +212,12 @@ def test_cash_out():
     # act
     init_gamble_balance = gamble_token.balanceOf(account.address)
     cash_out = init_gamble_balance
-    init_weth_balance = account.balance()
+    init_eth_balance = account.balance()
     tx = cage.cashOut(cash_out, {"from": account})
     # assert
     assert gamble_token.balanceOf(
         account.address) == init_gamble_balance - cash_out
-    assert account.balance() == init_weth_balance + buy_in
+    assert account.balance() == init_eth_balance + buy_in
 
 
 def test_cash_out_more_than_won():
