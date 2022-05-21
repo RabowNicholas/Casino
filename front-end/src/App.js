@@ -61,6 +61,7 @@ class App extends Component {
       this.state.account
     );
     this.setState({ ethBalance });
+    this.setState({ gmblBalance });
   }
 
   clickPlayHandler() {
@@ -124,13 +125,18 @@ class App extends Component {
         <Cage
           ethBalance={this.state.ethBalance}
           gmblBalance={this.state.gmblBalance}
-          gmblContract={this.state.gambleContract}
+          cageContract={this.state.cageContract}
         />
       );
     } else if (this.state.page === "stake") {
       content = <StakeForm ethBalance={this.state.ethBalance} />;
     } else if (this.state.page === "roulette") {
-      content = <Roulette contract={this.state.rouletteContract} />;
+      content = (
+        <Roulette
+          rouletteContract={this.state.rouletteContract}
+          account={this.state.account}
+        />
+      );
     }
     return (
       <div>

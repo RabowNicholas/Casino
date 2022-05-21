@@ -270,16 +270,17 @@ def deploy_contracts():
         {"from": dealer}
     )
     print(f"Cage deployed to {cage.address}")
-    link_token = get_contract('link_token')
+    print(f"Funding Cage at {cage.address} with ETH")
+    cage.buyIn({"value": 10e18, "from": dealer})
+    print(f"ETH balance of Cage: {cage.balance()}")
     print("Deploying Roulette...")
     roulette = Roulette.deploy(
         gamble_token.address,
         cage.address,
         {"from": dealer})
     print(f"Roulette deployed to {roulette.address}")
-    for i in range(1, 9):
+    for i in range(0, 9):
         players.append(get_account(index=i))
-        gamble_token.mint(players[i - 1], 10e15, {"from": dealer})
     print("Funded all players")
 
     return(
