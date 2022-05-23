@@ -37,9 +37,16 @@ class App extends Component {
     this.setState({ page: "play" });
   }
   async loadContracts(network_name, signer) {
-    let rouletteAddress = address_mapping[network_name]["Roulette"];
-    let gambleAddress = address_mapping[network_name]["GambleToken"];
-    let cageAddress = address_mapping[network_name]["Cage"];
+    let network_id;
+    if (network_name == "rinkeby") {
+      network_id = "4";
+    }
+    let rouletteAddress = address_mapping[network_id]["Roulette"][0];
+    console.log(rouletteAddress);
+    let gambleAddress = address_mapping[network_id]["GambleToken"][0];
+    console.log(gambleAddress);
+    let cageAddress = address_mapping[network_id]["Cage"][0];
+    console.log(cageAddress);
     const roulette = new ethers.Contract(
       rouletteAddress,
       rouletteAbi.abi,

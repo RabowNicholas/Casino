@@ -141,7 +141,7 @@ def test_claim_reward_simple():
     chain.sleep(SECONDS_IN_DAY)
     # act
     init_gamble_balance = gamble_token.balanceOf(account.address)
-    reward = 1e15
+    reward = 1e21
     tx = cage.claimReward({"from": account})
     tx.wait(1)
     # assert
@@ -162,7 +162,7 @@ def test_claim_reward_mult_stakes():
     chain.sleep(SECONDS_IN_DAY)
     # act
     init_gamble_balance = gamble_token.balanceOf(account.address)
-    reward = 1e15 * 4
+    reward = 1e21 * 4
     tx = cage.claimReward({"from": account})
     tx.wait(1)
     # assert

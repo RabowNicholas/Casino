@@ -24,6 +24,15 @@ class StakeForm extends Component {
       await this.props.cageContract.withdraw(amountToUnstake);
     }
   }
+
+  async handleClaimSubmit(e) {
+    e.preventDefault();
+    if (this.state.rewardsEarned == 0) {
+      alert(
+        "No rewards to claim at the moment. Stake more ETH or wait until tomorrow's drop!"
+      );
+    }
+  }
   async componentDidMount() {
     const stakedAmount = await this.props.cageContract.getStakedAmount(
       this.props.account
@@ -47,6 +56,7 @@ class StakeForm extends Component {
     };
     this.toggleForm = this.toggleForm.bind(this);
     this.handleStakeSubmit = this.handleStakeSubmit.bind(this);
+    this.handleClaimSubmit = this.handleClaimSubmit.bind(this);
   }
   render() {
     let stakeContent;
@@ -119,14 +129,22 @@ class StakeForm extends Component {
             <p>
               <small> Earn 1000 GMBL per 1 ETH staked </small>
             </p>
-
+            <p>
+              Amount Staked: {this.state.stakedAmount}{" "}
+              <img src={ethLogo} alt="ethLogo" />
+              ETH
+            </p>
             <p>
               {" "}
-              Rewards Earned: {this.state.rewardsEarned}
+              Rewards Earned:{" "}
+              {ethers.utils.formatEther(this.state.rewardsEarned) * 1000}
               <img src={chipLogo} alt="gmbl logo" />
             </p>
 
-            <input className="btn" type="submit" value="Claim"></input>
+            <button className="btn" onClick={this.handleClaimSubmit}>
+              {" "}
+              Claim{" "}
+            </button>
           </form>
         </div>
       </>

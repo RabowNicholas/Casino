@@ -112,7 +112,7 @@ contract Cage is Ownable{
     Stake[] memory currentStakes = stakerToStakes[_player];
     for (uint i = 0; i < currentStakes.length; i++){
       // mint = how much(eth) * how long(days) / rewardrate(1000)
-      rewardValue += (currentStakes[i].amount * ((block.timestamp - currentStakes[i].timestamp) / 1 days)) / rewardRate;
+      rewardValue += (currentStakes[i].amount * ((block.timestamp - currentStakes[i].timestamp) / 1 days)) * rewardRate;
     }
     return rewardValue;
   }
