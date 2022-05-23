@@ -1,6 +1,8 @@
 import { Component } from "react";
 import { ethers } from "ethers";
 import "../index.css";
+import ethLogo from "../assets/eth_logo.svg";
+import chipLogo from "../assets/chip_logo.png";
 
 class Cage extends Component {
   constructor(props) {
@@ -48,6 +50,7 @@ class Cage extends Component {
           <p>
             GMBL Balance:
             {ethers.utils.formatEther(this.props.gmblBalance).substring(0, 10)}
+            <img src={chipLogo} alt="gmbl logo" />
           </p>
           <input
             className="card__input"
@@ -61,7 +64,11 @@ class Cage extends Component {
               this.input = input;
             }}
           ></input>
-          <p> ETH to receive: {this.state.gmblValue / 1000} </p>
+          <p>
+            {" "}
+            ETH to receive: {this.state.gmblValue / 1000}{" "}
+            <img src={ethLogo} alt="ethLogo" />
+          </p>
           <input className="card__btn btn" type="submit" value="Swap"></input>
         </form>
       );
@@ -81,6 +88,7 @@ class Cage extends Component {
           <p>
             ETH Balance:
             {ethers.utils.formatEther(this.props.ethBalance).substring(0, 10)}
+            <img src={ethLogo} alt="ethLogo" />
           </p>
           <input
             className="card__input"
@@ -96,6 +104,7 @@ class Cage extends Component {
           ></input>
           <p className="card_statement">
             GMBL to receive: {this.state.ethValue * 1000}
+            <img src={chipLogo} alt="gmbl logo" />
           </p>
           <input className="card__btn btn" type="submit" value="Swap"></input>
         </form>
