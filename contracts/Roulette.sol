@@ -157,6 +157,7 @@ contract Roulette is Ownable{
   event LeftTable(address player);
 
 
+
   constructor (
     address _gambleTokenAddress,
     address _cageAddress
@@ -168,12 +169,13 @@ contract Roulette is Ownable{
   struct Bet {
     uint256 amount;
     BET betType;
+    bool settled;
   }
 
 
  //player functions
   function joinTable() public {
-    require(gambleToken.balanceOf(msg.sender) > 0, "You need GMBL to sit down at the table.");
+    require(gambleToken.balanceOf(msg.sender) > 0);
     atTable[msg.sender] = true;
     players.push(msg.sender);
     emit PlayerSatDown(msg.sender);
@@ -182,12 +184,16 @@ contract Roulette is Ownable{
   function placeBet(uint256[] memory _amounts, uint256[] memory _types) public qualified{
     require(_amounts.length == _types.length);
     for (uint i = 0; i < _amounts.length; i++) {
-      playerToBets[msg.sender].push(Bet(_amounts[i],BET(_types[i])));
+      playerToBets[msg.sender].push(Bet(_amounts[i], BET(_types[i]), false));
     }
+
     uint256 totalBet = _calculateTotalBet(_amounts);
     gambleToken.burn(msg.sender, totalBet);
 
     emit BetsPlaced(msg.sender, totalBet);
+
+    _spinWheel();
+    _settlePlayerBets(msg.sender);
   }
 
   function leaveTable() public qualified{
@@ -195,20 +201,6 @@ contract Roulette is Ownable{
     emit LeftTable(msg.sender);
   }
 
-  //owner functions
-  function spinWheel() public onlyOwner {
-    winningNumber = uint8(_random() % 38 + 1);
-    emit BallStopped(winningNumber);
-  }
-
-  function settleAllBets() public onlyOwner {
-    for(uint i = 0; i < players.length; i++){
-      if (!atTable[players[i]]) {
-      }  else {
-        _settlePlayerBets(players[i]);
-      }
-    }
-  }
 
 
   //viewer functions
@@ -229,6 +221,10 @@ contract Roulette is Ownable{
   }
 
   //internal functions
+  function _spinWheel() internal {
+    winningNumber = uint8(_random() % 38 + 1);
+    emit BallStopped(winningNumber);
+  }
   function _random() internal returns(uint256) {
     return(uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp, players))));
   }
@@ -243,17 +239,26 @@ contract Roulette is Ownable{
     Bet[] memory playerBets = playerToBets[_player];
     uint256 payout = 0;
     for (uint i = 0; i < playerBets.length; i++){
-      uint256 multiplier = _winOrLoss(playerBets[i].betType);
-      if (multiplier != 0){
-        payout += ((playerBets[i].amount * multiplier) + playerBets[i].amount);
+      if (playerToBets[_player][i].settled == false){
+        uint256 multiplier = _winOrLoss(playerBets[i].betType);
+        if (multiplier != 0){
+          payout += ((playerBets[i].amount * multiplier) + playerBets[i].amount);
+        }
+        playerToBets[_player][i].settled = true;
       }
     }
 
-    require(payout > 0, "Payout was 0");
-    gambleToken.mint(_player, payout);
-    playerToWinnings[_player] = payout;
-    playerToLifetimeWinnings[_player] += payout;
-    emit WinningsPaidOut(_player, payout);
+    if (payout > 0)
+    {
+      gambleToken.mint(_player, payout);
+      playerToWinnings[_player] = payout;
+      playerToLifetimeWinnings[_player] += payout;
+      emit WinningsPaidOut(_player, payout);
+    }
+    else {
+      emit WinningsPaidOut(_player, payout);
+      playerToWinnings[_player] = 0;
+    }
 
   }
   function _winOrLoss(BET _betType) internal view returns(uint256){
@@ -1133,7 +1138,7 @@ contract Roulette is Ownable{
     }
 
     modifier qualified() {
-      require(atTable[msg.sender], "Must be sitting at table to place bet.");
+      require(atTable[msg.sender]);
       _;
     }
   }

@@ -1,4 +1,5 @@
 import { Component } from "react";
+import { ethers } from "ethers";
 import "../index.css";
 import roulette_wheel from "../assets/roulette/wheel.png";
 import roulette_animate from "../assets/roulette/roulette_animate.gif";
@@ -201,6 +202,14 @@ class Roulette extends Component {
     this.setState({ extraBet: e.target.value });
   }
 
+  setTotalBet() {
+    let totalBet = 0;
+    this.state.amounts.map((amount) => {
+      totalBet += parseInt(amount);
+    });
+    this.setState({ totalBet });
+  }
+
   handleAddBet() {
     this.betBuffer.push({
       chip: this.state.chipSelect,
@@ -210,6 +219,7 @@ class Roulette extends Component {
       Bets: [...prevState.Bets, this.state.extraBet],
     }));
     this.setState({ amounts: [...this.state.amounts, this.state.chipSelect] });
+    this.setTotalBet();
   }
 
   handleNumberClick(e) {
@@ -217,6 +227,7 @@ class Roulette extends Component {
     let currentBet = this.BET[e.target.id];
     this.setState({ Bets: [...this.state.Bets, currentBet] });
     this.setState({ amounts: [...this.state.amounts, this.state.chipSelect] });
+    this.setTotalBet();
   }
 
   handleClearBets() {
@@ -224,6 +235,7 @@ class Roulette extends Component {
     this.setState({ Bets: [] });
     this.setState({ amounts: [] });
     this.setState({ state: "waiting_for_bet" });
+    this.setState({ totalBet: 0 });
   }
 
   handlePlaceBets() {
@@ -232,9 +244,13 @@ class Roulette extends Component {
       if (amounts[i] == "1 ETH") {
         amounts[i] = 1000;
       }
-      amounts[i] = amounts[i] * 1e15;
+      amounts[i] = ethers.utils.parseEther(amounts[i].toString());
     }
     this.setState({ amounts }, this.placeBets);
+  }
+
+  handleWinningsPaidOut(player, payout) {
+    console.log(payout);
   }
 
   async placeBets() {
@@ -244,26 +260,28 @@ class Roulette extends Component {
       this.state.amounts,
       this.state.Bets
     );
-    this.spinWheel();
-  }
-
-  async spinWheel() {
-    //will work while the owner is playing, but no one else. to improve use chainlink keepers to make spinWheel call.
     this.setState({ state: "spinning" });
-    await this.props.rouletteContract.spinWheel();
-    const winningNumber = await this.props.rouletteContract.getWinningNumber();
-    this.setState({ winningNumber }, console.log(winningNumber));
-    this.setState({ state: "stopped" });
+
+    this.props.provider.once("block", () => {
+      this.props.rouletteContract.on("BallStopped", (winningNumber) => {
+        this.setState({ winningNumber }, () => {
+          this.setState({ state: "stopped" });
+          console.log(winningNumber);
+        });
+      });
+    });
   }
 
-  async handleSettlement() {
-    console.log("settling...");
-    await this.props.rouletteContract.settleAllBets();
-    const winnings = await this.props.rouletteContract.getWinnings(
+  async componentDidMount() {
+    let gambleBalance = await this.props.gambleContract.balanceOf(
       this.props.account
     );
-    console.log(winnings);
-    this.setState({ state: "waiting_for_bet" });
+    gambleBalance = ethers.utils.formatEther(gambleBalance).substring(0, 10);
+    this.setState({ gambleBalance });
+    this.props.rouletteContract.removeAllListeners();
+  }
+  async componentWillUnmount() {
+    this.props.rouletteContract.removeAllListeners();
   }
 
   constructor(props) {
@@ -275,6 +293,8 @@ class Roulette extends Component {
       Bets: [],
       amounts: [],
       winningNumber: 0,
+      gambleBalance: 0,
+      totalBet: 0,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -282,9 +302,7 @@ class Roulette extends Component {
     this.handleNumberClick = this.handleNumberClick.bind(this);
     this.handleClearBets = this.handleClearBets.bind(this);
     this.handlePlaceBets = this.handlePlaceBets.bind(this);
-    this.spinWheel = this.spinWheel.bind(this);
     this.placeBets = this.placeBets.bind(this);
-    this.handleSettlement = this.handleSettlement.bind(this);
   }
   render() {
     let wheel_img;
@@ -294,7 +312,6 @@ class Roulette extends Component {
       wheel_img = roulette_animate;
     } else if (this.state.state === "stopped") {
       wheel_img = stopArray[this.state.winningNumber];
-      this.handleSettlement();
     }
 
     const betOptionsSplits = [
@@ -1001,13 +1018,19 @@ class Roulette extends Component {
           </div>
         </div>
         <div className="gameinfo">
+          <p> GMBL Balance:{this.state.gambleBalance} </p>
           <ul>
-            <p>Bets to be placed:</p>
+            <p>
+              <big>Bets to be placed:</big>
+            </p>
             {this.betBuffer.map((bet) => (
               <li>
                 {bet.chip} on {bet.value}
               </li>
             ))}
+            <li>
+              <big>Total Bet: {this.state.totalBet}</big>
+            </li>
           </ul>
         </div>
       </>

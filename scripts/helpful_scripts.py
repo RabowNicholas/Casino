@@ -261,13 +261,14 @@ def deploy_contracts():
         pytest.skip()
     dealer = get_account(index=0)
     players = []
-    gamble_token = GambleToken.deploy({"from": dealer})
+    gamble_token = GambleToken.deploy({"from": dealer},publish_source=config["networks"][network.show_active()].get("verify"))
     print("Deploying Cage...")
     cage = Cage.deploy(
         gamble_token.address,
         1000,
         1000,
-        {"from": dealer}
+        {"from": dealer},
+        publish_source=config["networks"][network.show_active()].get("verify")
     )
     print(f"Cage deployed to {cage.address}")
     print(f"Funding Cage at {cage.address} with ETH")
@@ -277,10 +278,13 @@ def deploy_contracts():
     roulette = Roulette.deploy(
         gamble_token.address,
         cage.address,
-        {"from": dealer})
+        {"from": dealer},
+        publish_source=config["networks"][network.show_active()].get("verify"))
     print(f"Roulette deployed to {roulette.address}")
-    for i in range(0, 9):
+    print("Funding players...")
+    for i in range(1, 3):
         players.append(get_account(index=i))
+        cage.buyIn({"value": 1e16, "from" :players[i-1]})
     print("Funded all players")
 
     return(
