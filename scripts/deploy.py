@@ -16,12 +16,14 @@ def deploy():
 
     account = get_account()
     print(f"Account is {account}")
-    gamble_token = GambleToken.deploy({"from": account})
+    gamble_token = GambleToken.deploy({"from": account},
+        publish_source=config["networks"][network.show_active()].get('verify'))
     cage = Cage.deploy(
         gamble_token.address,
         1000,
         1000,
-        {"from": account}
+        {"from": account},
+        publish_source=config["networks"][network.show_active()].get('verify')
     )
     roulette = Roulette.deploy(
         gamble_token.address,

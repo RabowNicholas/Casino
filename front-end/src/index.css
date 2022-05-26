@@ -358,6 +358,15 @@ code {
 
 .gameinfo {
   font-size: 1vw;
+  margin: 1rem;
+}
+
+.gameinfo p {
+  margin-top: 20px;
+}
+
+.gameinfo li {
+  margin-top: 10px;
 }
 
 /*Cage*/

@@ -91,11 +91,13 @@ class App extends Component {
         "You need GMBL to sit down at table. Go to Cage to get more chips."
       );
     } else {
-      await this.state.rouletteContract.joinTable();
       let isAtTable = await this.state.rouletteContract.isAtTable(
         this.state.account
       );
       if (isAtTable) {
+        this.setState({ page: "roulette" });
+      } else if (!isAtTable) {
+        await this.state.rouletteContract.joinTable();
         this.setState({ page: "roulette" });
       }
     }
@@ -148,6 +150,8 @@ class App extends Component {
         <Roulette
           rouletteContract={this.state.rouletteContract}
           account={this.state.account}
+          gambleContract={this.state.gambleContract}
+          provider={this.state.provider}
         />
       );
     }
