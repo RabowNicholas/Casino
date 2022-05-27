@@ -30,6 +30,8 @@ class StakeForm extends Component {
       alert(
         "No rewards to claim at the moment. Stake more ETH or wait until tomorrow's drop!"
       );
+    } else {
+      await this.props.cageContract.claimReward();
     }
   }
 
@@ -146,8 +148,7 @@ class StakeForm extends Component {
             </p>
 
             <button className="btn" onClick={this.handleClaimSubmit}>
-              {" "}
-              Claim{" "}
+              Claim
             </button>
           </form>
         </div>
