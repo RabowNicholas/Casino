@@ -33,7 +33,7 @@ class Navbar extends Component {
     return (
       <nav className="navbar">
         <div className="navbar__left">
-          <img className="navbar__logo" src={chip_logo} alt="logo" />
+          <img src={chip_logo} alt="logo" />
           {navtabs}
         </div>
         <div className="navbar__account">

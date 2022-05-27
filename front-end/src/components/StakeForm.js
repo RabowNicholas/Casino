@@ -17,7 +17,6 @@ class StakeForm extends Component {
     e.preventDefault();
     if (this.state.stakeForm === "stake") {
       let amountToStake = ethers.utils.parseEther(this.state.stakeAmount);
-      console.log(amountToStake);
       await this.props.cageContract.stake({ value: amountToStake });
     } else if (this.state.stakeForm === "unstake") {
       let amountToUnstake = ethers.utils.parseEther(this.state.unstakeAmount);
@@ -27,28 +26,33 @@ class StakeForm extends Component {
 
   async handleClaimSubmit(e) {
     e.preventDefault();
-    if (this.state.rewardsEarned == 0) {
+    if (this.state.rewardsEarned === 0) {
       alert(
         "No rewards to claim at the moment. Stake more ETH or wait until tomorrow's drop!"
       );
     }
   }
+
   async componentDidMount() {
+    const ethBalance = await this.props.provider.getBalance(this.props.account);
     const stakedAmount = await this.props.cageContract.getStakedAmount(
       this.props.account
     );
-    this.setState({
-      stakedAmount: ethers.utils.formatEther(stakedAmount._hex),
-    });
     const rewardsEarned = await this.props.cageContract.getRewardValue(
       this.props.account
     );
+    this.setState({ ethBalance });
+    this.setState({
+      stakedAmount: ethers.utils.formatEther(stakedAmount._hex),
+    });
     this.setState({ rewardsEarned: parseInt(rewardsEarned, 10) });
   }
+
   constructor(props) {
     super(props);
     this.state = {
       stakeForm: "stake",
+      ethBalance: 0,
       stakeAmount: 0,
       unstakeAmount: 0,
       stakedAmount: 0,
@@ -65,7 +69,7 @@ class StakeForm extends Component {
         <>
           <p className="card_statment">
             Balance:{" "}
-            {ethers.utils.formatEther(this.props.ethBalance).substring(0, 10)}
+            {ethers.utils.formatEther(this.state.ethBalance).substring(0, 10)}
             <img src={ethLogo} alt="ethLogo" />
             ETH
           </p>
@@ -127,10 +131,10 @@ class StakeForm extends Component {
           <form className="card">
             <h1>Rewards</h1>
             <p>
-              <small> Earn 1000 GMBL per 1 ETH staked </small>
+              <small> Earn 1000 GMBL per day per 1 ETH staked </small>
             </p>
             <p>
-              Amount Staked: {this.state.stakedAmount}{" "}
+              Amount Staked: {this.state.stakedAmount}
               <img src={ethLogo} alt="ethLogo" />
               ETH
             </p>

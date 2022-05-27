@@ -6,8 +6,22 @@ import slots from "../assets/slots.png";
 import blackjack from "../assets/blackjack.png";
 
 class PlayCards extends Component {
-  joinRoulette() {
-    this.props.joinRoulette();
+  async joinRoulette() {
+    if ((await this.props.gambleContract.balanceOf(this.props.account)) === 0) {
+      alert(
+        "You need GMBL to sit down at table. Go to Cage to get more chips."
+      );
+    } else {
+      let isAtTable = await this.props.rouletteContract.isAtTable(
+        this.props.account
+      );
+      if (isAtTable) {
+        this.props.changePage("roulette");
+      } else if (!isAtTable) {
+        await this.props.rouletteContract.joinTable();
+        this.setState({ page: "roulette" });
+      }
+    }
   }
 
   constructor(props) {

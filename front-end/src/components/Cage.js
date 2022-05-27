@@ -5,17 +5,6 @@ import ethLogo from "../assets/eth_logo.svg";
 import chipLogo from "../assets/chip_logo.png";
 
 class Cage extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      ethValue: 0,
-      gmblValue: 0,
-      form: "buyIn",
-    };
-
-    this.toggleForm = this.toggleForm.bind(this);
-  }
-
   async getGamble(amount) {
     await this.props.cageContract.buyIn({ value: amount });
   }
@@ -24,12 +13,32 @@ class Cage extends Component {
   }
 
   toggleForm() {
-    console.log("changing");
     if (this.state.form === "buyIn") {
       this.setState({ form: "cashOut" });
     } else if (this.state.form === "cashOut") {
       this.setState({ form: "buyIn" });
     }
+  }
+
+  async componentDidMount() {
+    const ethBalance = await this.props.provider.getBalance(this.props.account);
+    let gmblBalance = await this.props.gambleContract.balanceOf(
+      this.props.account
+    );
+    this.setState({ ethBalance });
+    this.setState({ gmblBalance });
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      ethBalance: 0,
+      gmblBalance: 0,
+      ethValue: 0,
+      gmblValue: 0,
+      form: "buyIn",
+    };
+    this.toggleForm = this.toggleForm.bind(this);
   }
 
   render() {
@@ -49,7 +58,7 @@ class Cage extends Component {
           <h1> Cash Out </h1>
           <p>
             GMBL Balance:
-            {ethers.utils.formatEther(this.props.gmblBalance).substring(0, 10)}
+            {ethers.utils.formatEther(this.state.gmblBalance).substring(0, 10)}
             <img src={chipLogo} alt="gmbl logo" />
           </p>
           <input
@@ -87,7 +96,7 @@ class Cage extends Component {
           <h1> Buy In </h1>
           <p>
             ETH Balance:
-            {ethers.utils.formatEther(this.props.ethBalance).substring(0, 10)}
+            {ethers.utils.formatEther(this.state.ethBalance).substring(0, 10)}
             <img src={ethLogo} alt="ethLogo" />
           </p>
           <input
