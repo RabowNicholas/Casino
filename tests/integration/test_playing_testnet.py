@@ -104,7 +104,7 @@ def test_playing():
 
     #cash out
     current_balance = gamble_token.balanceOf(account)
-    assert current_balance == after_buy_player_gamble + actual_payout - bet_amount
+    assert current_balance == gmbl_balance + actual_payout - bet_amount
     print(f"Current GMBL balance is: {current_balance/1e18} GMBL")
     assert actual_payout == expected_payout
     cash_out_amount_expected = 5e18
