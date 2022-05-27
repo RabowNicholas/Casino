@@ -15,12 +15,12 @@ The CryptoCasino is an online casino powered by smart contracts and deployed on 
 #### Breakdown
 
 - Smart Contracts
-  - Cage.sol
-  - GambleToken.sol
-  - Roulette.sol
+  - [Cage.sol](https://github.com/RabowNicholas/Casino/blob/main/contracts/Cage.sol)
+  - [GambleToken.sol](https://github.com/RabowNicholas/Casino/blob/main/contracts/GambleToken.sol)
+  - [Roulette.sol](https://github.com/RabowNicholas/Casino/blob/main/contracts/Roulette.sol)
 - Tests
-   - Brownie Framework
-   - Unit testing done in local ganache environment
+   - [Brownie](https://eth-brownie.readthedocs.io/en/stable/) Framework
+   - Unit testing done in local ganache environment using [mocks](https://ethereum.org/en/developers/tutorials/how-to-mock-solidity-contracts-for-testing/)
    - Integration testing done using contracts deployed to the Rinkeby Testnet
 - Front end
    - Node.js
@@ -28,10 +28,20 @@ The CryptoCasino is an online casino powered by smart contracts and deployed on 
 
 ### Backend
 #### Local Development
+Test driven development was my main focus during this process of the development life cycle. I had a list of features that needed to be incorporated. In order to do so, I wrote tests that would demonstrate proper functionality. From there, I found the simpliest and most secure solution to the make the test pass and refactored as needed. This process allowed for more concise code, faster development and more secure contracts. I used Ganache and Brownie to run a local blockchain on my machine in order to execute these tests. The tests are written in python and use the pytest module. Upon satisfactory unit tests, I wrote a local integration test.
 
 #### Testnet Deployment
+The contracts were deployed to the Rinkeby Testnet. [Scripts](https://github.com/RabowNicholas/Casino/tree/main/scripts) were used to deploy the contracts and verify the source code on Etherscan (this proved vital to debugging and determining front end development later on). Once deployed, I was able to write a full integration [test](https://github.com/RabowNicholas/Casino/blob/main/tests/integration/test_playing_testnet.py) for the contracts. 
+
+![Integration](https://drive.google.com/file/d/1amtacTQk5GEfgszZqjr0ado2DZzcDLJq/view?usp=sharing "Integration Test")
 
 ### Frontend
+Building out a front end was new to me. I used React JS to create the application and ethers.js to connect to the blockchain and my smart contracts.
+- Landing Page
+- Stake
+- Cage
+- Play
+ - Roulette
 
 ### Future of Project
 
