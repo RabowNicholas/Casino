@@ -33,7 +33,8 @@ Test driven development was my main focus during this process of the development
 #### Testnet Deployment
 The contracts were deployed to the Rinkeby Testnet. [Scripts](https://github.com/RabowNicholas/Casino/tree/main/scripts) were used to deploy the contracts and verify the source code on Etherscan (this proved vital to debugging and determining front end development later on). Once deployed, I was able to write a full integration [test](https://github.com/RabowNicholas/Casino/blob/main/tests/integration/test_playing_testnet.py) for the contracts. 
 
-![Integration](https://drive.google.com/uc?export=view&id=1amtacTQk5GEfgszZqjr0ado2DZzcDLJq "Integration Test")
+<a href="https://drive.google.com/uc?export=view&id=1amtacTQk5GEfgszZqjr0ado2DZzcDLJq"><img src="https://drive.google.com/uc?export=view&id=1amtacTQk5GEfgszZqjr0ado2DZzcDLJq" style="width: 500px; max-width: 100%; height: auto" title="Click for the larger version." /></a>
+
 
 ### Frontend
 Building out a front end was new to me. I used React JS to create the application and ethers.js to connect to the blockchain and my smart contracts.
