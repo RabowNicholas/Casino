@@ -54,14 +54,13 @@ import black from "../assets/roulette/table/black.png";
 import blank from "../assets/roulette/table/blank.png";
 import chip1 from "../assets/chip1.png";
 import chip5 from "../assets/chip5.png";
-import chip10 from "../assets/chip10.png";
 import chip25 from "../assets/chip25.png";
 import chip100 from "../assets/chip100.png";
 import chipeth from "../assets/chipeth.png";
 import stopArray from "../assets/roulette/stop/stopArray";
 
 class Roulette extends Component {
-  betBuffer = new Array();
+  betBuffer = [];
   BET = {
     Red: 0,
     Black: 1,
@@ -194,22 +193,20 @@ class Roulette extends Component {
     Square_32333536: 128,
   };
 
+  handleNumberClick(e) {
+    this.betBuffer.push({ chip: this.state.chipSelect, value: e.target.id });
+    let currentBet = e.target.id;
+    this.setState({ Bets: [...this.state.Bets, currentBet] });
+    this.setState({ amounts: [...this.state.amounts, this.state.chipSelect] });
+    this.setTotalBet();
+  }
   changeChipSelect(chip) {
     this.setState({ chipSelect: chip });
   }
 
-  handleChange(e) {
+  handleChangeExtraBet(e) {
     this.setState({ extraBet: e.target.value });
   }
-
-  setTotalBet() {
-    let totalBet = 0;
-    this.state.amounts.map((amount) => {
-      totalBet += parseInt(amount);
-    });
-    this.setState({ totalBet });
-  }
-
   handleAddBet() {
     this.betBuffer.push({
       chip: this.state.chipSelect,
@@ -222,14 +219,29 @@ class Roulette extends Component {
     this.setTotalBet();
   }
 
-  handleNumberClick(e) {
-    this.betBuffer.push({ chip: this.state.chipSelect, value: e.target.id });
-    let currentBet = this.BET[e.target.id];
-    this.setState({ Bets: [...this.state.Bets, currentBet] });
-    this.setState({ amounts: [...this.state.amounts, this.state.chipSelect] });
-    this.setTotalBet();
+  setTotalBet() {
+    let totalBet = 0;
+    this.state.amounts.map((amount) => {
+      totalBet += parseInt(amount);
+    });
+    this.setState({ totalBet });
   }
 
+  handlePlaceBets() {
+    let amounts = [...this.state.amounts];
+    for (var i = 0; i < amounts.length; i++) {
+      if (amounts[i] === "1 ETH") {
+        amounts[i] = 1000;
+      }
+      amounts[i] = ethers.utils.parseEther(amounts[i].toString());
+    }
+    let Bets = [...this.state.Bets];
+    console.log(Bets);
+    for (i = 0; i < Bets.length; i++) {
+      Bets[i] = this.BET[Bets[i]];
+    }
+    this.setState({ amounts }, this.setState({ Bets }, this.placeBets));
+  }
   handleClearBets() {
     this.betBuffer.length = 0;
     this.setState({ Bets: [] });
@@ -238,24 +250,7 @@ class Roulette extends Component {
     this.setState({ totalBet: 0 });
   }
 
-  handlePlaceBets() {
-    let amounts = [...this.state.amounts];
-    for (var i = 0; i < amounts.length; i++) {
-      if (amounts[i] == "1 ETH") {
-        amounts[i] = 1000;
-      }
-      amounts[i] = ethers.utils.parseEther(amounts[i].toString());
-    }
-    this.setState({ amounts }, this.placeBets);
-  }
-
-  handleWinningsPaidOut(player, payout) {
-    console.log(payout);
-  }
-
   async placeBets() {
-    console.log(this.state.amounts);
-    console.log(this.state.Bets);
     await this.props.rouletteContract.placeBet(
       this.state.amounts,
       this.state.Bets
@@ -296,8 +291,7 @@ class Roulette extends Component {
       gambleBalance: 0,
       totalBet: 0,
     };
-
-    this.handleChange = this.handleChange.bind(this);
+    this.handleChangeExtraBet = this.handleChangeExtraBet.bind(this);
     this.handleAddBet = this.handleAddBet.bind(this);
     this.handleNumberClick = this.handleNumberClick.bind(this);
     this.handleClearBets = this.handleClearBets.bind(this);
@@ -992,7 +986,7 @@ class Roulette extends Component {
             <select
               name="bets"
               value={this.state.extraBet}
-              onChange={this.handleChange}
+              onChange={this.handleChangeExtraBet}
             >
               <option value="" disable="true" hidden>
                 None

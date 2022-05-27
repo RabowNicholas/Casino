@@ -13,9 +13,6 @@ import gambleAbi from "./contracts_data/GambleToken.json";
 import cageAbi from "./contracts_data/Cage.json";
 
 class App extends Component {
-  async componentDidMount() {
-    this.connectBlockchain();
-  }
   async connectBlockchain() {
     //get provider from metamask
     const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -27,26 +24,14 @@ class App extends Component {
     this.loadContracts(network.name, signer);
   }
 
-  //LandingPage pass through functions
-  async connectWallet() {
-    //get account
-    const accounts = await window.ethereum.request({
-      method: "eth_requestAccounts",
-    });
-    await this.setState({ account: accounts[0] });
-    this.setState({ page: "play" });
-  }
   async loadContracts(network_name, signer) {
     let network_id;
-    if (network_name == "rinkeby") {
+    if (network_name === "rinkeby") {
       network_id = "4";
     }
     let rouletteAddress = address_mapping[network_id]["Roulette"][0];
-    console.log(rouletteAddress);
     let gambleAddress = address_mapping[network_id]["GambleToken"][0];
-    console.log(gambleAddress);
     let cageAddress = address_mapping[network_id]["Cage"][0];
-    console.log(cageAddress);
     const roulette = new ethers.Contract(
       rouletteAddress,
       rouletteAbi.abi,
@@ -59,48 +44,32 @@ class App extends Component {
     this.setState({ cageContract: cage });
   }
 
-  //Navbar pass through functions
-  async clickCageHandler() {
-    this.setState({ page: "cage" });
-    const provider = this.state.provider;
-    const ethBalance = await provider.getBalance(this.state.account);
-    let gmblBalance = await this.state.gambleContract.balanceOf(
-      this.state.account
-    );
-    this.setState({ ethBalance });
-    this.setState({ gmblBalance });
-  }
-
-  clickPlayHandler() {
+  //LandingPage pass through functions
+  async connectWallet() {
+    //get account
+    const accounts = await window.ethereum.request({
+      method: "eth_requestAccounts",
+    });
+    await this.setState({ account: accounts[0] });
     this.setState({ page: "play" });
   }
 
+  //Navbar pass through functions
+  async clickCageHandler() {
+    this.setState({ page: "cage" });
+  }
+  clickPlayHandler() {
+    this.setState({ page: "play" });
+  }
   async clickStakeHandler() {
     this.setState({ page: "stake" });
-    const ethBalance = await this.state.provider.getBalance(this.state.account);
-    let gmblBalance = await this.state.gambleContract.balanceOf(
-      this.state.account
-    );
-    this.setState({ ethBalance });
   }
 
-  //PlayCards pass through functions
-  async clickJoinRouletteHandler() {
-    if ((await this.state.gambleContract.balanceOf(this.state.account)) === 0) {
-      alert(
-        "You need GMBL to sit down at table. Go to Cage to get more chips."
-      );
-    } else {
-      let isAtTable = await this.state.rouletteContract.isAtTable(
-        this.state.account
-      );
-      if (isAtTable) {
-        this.setState({ page: "roulette" });
-      } else if (!isAtTable) {
-        await this.state.rouletteContract.joinTable();
-        this.setState({ page: "roulette" });
-      }
-    }
+  changePage(page) {
+    this.setState({ page });
+  }
+  async componentDidMount() {
+    this.connectBlockchain();
   }
 
   constructor(props) {
@@ -119,8 +88,8 @@ class App extends Component {
     this.connectWallet = this.connectWallet.bind(this);
     this.clickCageHandler = this.clickCageHandler.bind(this);
     this.clickPlayHandler = this.clickPlayHandler.bind(this);
-    this.clickJoinRouletteHandler = this.clickJoinRouletteHandler.bind(this);
     this.clickStakeHandler = this.clickStakeHandler.bind(this);
+    this.changePage = this.changePage.bind(this);
   }
 
   render() {
@@ -128,30 +97,38 @@ class App extends Component {
     if (this.state.page === "landing") {
       content = <LandingPage connectWallet={this.connectWallet} />;
     } else if (this.state.page === "play") {
-      content = <PlayCards joinRoulette={this.clickJoinRouletteHandler} />;
+      content = (
+        <PlayCards
+          account={this.state.account}
+          gambleContract={this.state.gambleContract}
+          rouletteContract={this.state.rouletteContract}
+          changePage={this.changePage}
+        />
+      );
     } else if (this.state.page === "cage") {
       content = (
         <Cage
-          ethBalance={this.state.ethBalance}
-          gmblBalance={this.state.gmblBalance}
+          account={this.state.account}
+          provider={this.state.provider}
           cageContract={this.state.cageContract}
+          gambleContract={this.state.gambleContract}
         />
       );
     } else if (this.state.page === "stake") {
       content = (
         <StakeForm
           account={this.state.account}
-          ethBalance={this.state.ethBalance}
+          provider={this.state.provider}
           cageContract={this.state.cageContract}
         />
       );
     } else if (this.state.page === "roulette") {
       content = (
         <Roulette
-          rouletteContract={this.state.rouletteContract}
           account={this.state.account}
-          gambleContract={this.state.gambleContract}
           provider={this.state.provider}
+          rouletteContract={this.state.rouletteContract}
+          gambleContract={this.state.gambleContract}
         />
       );
     }
