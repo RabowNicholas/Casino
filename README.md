@@ -15,16 +15,16 @@ The CryptoCasino is an online casino powered by smart contracts and deployed on 
 #### Breakdown
 
 1. Smart Contracts
- -Cage.sol
- -GambleToken.sol
- -Roulette.sol
+ - Cage.sol
+ - GambleToken.sol
+ - Roulette.sol
 3. Tests
-  -Brownie Framework
-  -Unit testing done in local ganache environment
-  -Integration testing done using contracts deployed to the Rinkeby Testnet
+  - Brownie Framework
+  - Unit testing done in local ganache environment
+  - Integration testing done using contracts deployed to the Rinkeby Testnet
 5. Front end
-  -Node.js
-  -React Framework
+  - Node.js
+  - React Framework
 
 ### Backend
 #### Local Development
