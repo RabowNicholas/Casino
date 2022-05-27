@@ -39,10 +39,10 @@ The contracts were deployed to the Rinkeby Testnet. [Scripts](https://github.com
 
 
 ### Frontend
-Building out a front end was new to me. I used React JS to create the application and ethers.js to connect to the blockchain and my smart contracts.
+Building out a front end was new to me. I used React JS to create the application and ethers.js to connect to the blockchain and my smart contracts. All of the images in the front end were created by myself using a few different softwares.
 - Landing Page
   
-  <a href="https://drive.google.com/uc?export=view&id=1WlbKPHtBGGCA4Wl-uzZmlafvvTYnxY5H"><img src="https://drive.google.com/uc?export=view&id=1WlbKPHtBGGCA4Wl-uzZmlafvvTYnxY5H" style="width: 500px; max-width: 100%; height: auto" title="Click for the larger version." /></a>
+<a href="https://drive.google.com/uc?export=view&id=1WlbKPHtBGGCA4Wl-uzZmlafvvTYnxY5H"><img src="https://drive.google.com/uc?export=view&id=1WlbKPHtBGGCA4Wl-uzZmlafvvTYnxY5H" style="width: 500px; max-width: 100%; height: auto" title="Click for the larger version." /></a>
   
   
 - Stake
@@ -67,6 +67,9 @@ Building out a front end was new to me. I used React JS to create the applicatio
  
 
 ### Future of Project
+
+As far as the current contract goes, there is a security flaw that could potentially lead to explotation. Right now I am using a method to generate a random from blockchain information and a few internal variables. This could be improved by using an oracle service such as Chainlink's [VRF](https://docs.chain.link/docs/chainlink-vrf/) to generate a verifiable random number.
+I also have plans to include more games as seen on the Play page (Slots and Blackjack).
 
 
 
