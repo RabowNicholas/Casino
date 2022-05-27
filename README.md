@@ -41,15 +41,30 @@ The contracts were deployed to the Rinkeby Testnet. [Scripts](https://github.com
 ### Frontend
 Building out a front end was new to me. I used React JS to create the application and ethers.js to connect to the blockchain and my smart contracts.
 - Landing Page
+  
   <a href="https://drive.google.com/uc?export=view&id=1WlbKPHtBGGCA4Wl-uzZmlafvvTYnxY5H"><img src="https://drive.google.com/uc?export=view&id=1WlbKPHtBGGCA4Wl-uzZmlafvvTYnxY5H" style="width: 500px; max-width: 100%; height: auto" title="Click for the larger version." /></a>
+  
+  
 - Stake
+
 <a href="https://drive.google.com/uc?export=view&id=1Buj05BchkypF3sJFcrCIaM7L_FyMpQxE"><img src="https://drive.google.com/uc?export=view&id=1Buj05BchkypF3sJFcrCIaM7L_FyMpQxE" style="width: 500px; max-width: 100%; height: auto" title="Click for the larger version." /></a>
+
+
 - Cage
+
 <a href="https://drive.google.com/uc?export=view&id=1LxXGKXYY94SFC0jM4D_3sztj3tpUeXOr"><img src="https://drive.google.com/uc?export=view&id=1LxXGKXYY94SFC0jM4D_3sztj3tpUeXOr" style="width: 500px; max-width: 100%; height: auto" title="Click for the larger version." /></a>
+
+
 - Play
+
 <a href="https://drive.google.com/uc?export=view&id=1x01c-TTMV-68nCT6HrZY4hILCrx-ULFM"><img src="https://drive.google.com/uc?export=view&id=1x01c-TTMV-68nCT6HrZY4hILCrx-ULFM" style="width: 500px; max-width: 100%; height: auto" title="Click for the larger version." /></a>
+
+
  - Roulette
+ 
  <a href="https://drive.google.com/uc?export=view&id=124GDTAa5lUqv0C4xL3rsrif0Xb-lIN-U"><img src="https://drive.google.com/uc?export=view&id=124GDTAa5lUqv0C4xL3rsrif0Xb-lIN-U" style="width: 500px; max-width: 100%; height: auto" title="Click for the larger version." /></a>
+ 
+ 
 
 ### Future of Project
 
