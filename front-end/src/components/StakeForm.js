@@ -47,7 +47,8 @@ class StakeForm extends Component {
     this.setState({
       stakedAmount: ethers.utils.formatEther(stakedAmount._hex),
     });
-    this.setState({ rewardsEarned: parseInt(rewardsEarned, 10) });
+    console.log(rewardsEarned);
+    this.setState({ rewardsEarned: rewardsEarned });
   }
 
   constructor(props) {
@@ -143,7 +144,7 @@ class StakeForm extends Component {
             <p>
               {" "}
               Rewards Earned:{" "}
-              {ethers.utils.formatEther(this.state.rewardsEarned) * 1000}
+              {ethers.utils.formatEther(this.state.rewardsEarned)}
               <img src={chipLogo} alt="gmbl logo" />
             </p>
 
